@@ -1,0 +1,21 @@
+# Python / env
+.venv/
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+MUJOCO_LOG.TXT
+
+# Generated results (trajectories, plots, videos) -- curated copies live in images/
+out/
+
+# Scratch scenes written next to the models by the scripts
+models/_*.xml
+
+# JPL's source models, and the meshes/texture converted from them by setup.sh.
+# These belong to NASA/JPL, so they're fetched rather than stored here.
+m2020-urdf-models/
+models/assets/*.obj
+models/assets/M2020_Rover_Texture.png
+
+_to_delete/

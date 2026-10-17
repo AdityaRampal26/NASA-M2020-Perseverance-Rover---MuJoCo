@@ -1,0 +1,24 @@
+{
+ "source": "HiRISE DTEEC_045994_1985_046060_1985_U01 (USGS/UA, PDS3)",
+ "source_url": "https://www.uahirise.org/PDS/DTM/ESP/ORB_045900_045999/ESP_045994_1985_ESP_046060_1985/DTEEC_045994_1985_046060_1985_U01.IMG",
+ "product_page": "https://www.uahirise.org/dtm/dtm.php?ID=ESP_045994_1985",
+ "site_lat": 18.4447,
+ "site_lon": 77.4508,
+ "site_name": "Octavia E. Butler Landing",
+ "patch_m": 400.0,
+ "grid": 513,
+ "post_m": 0.78125,
+ "elev_min_m": -2572.6056365966797,
+ "elev_max_m": -2564.257656082511,
+ "relief_m": 8.34798051416874,
+ "slope_mean_deg": 3.1483747456637574,
+ "slope_p95_deg": 8.202623687784568,
+ "slope_max_deg": 31.438133904067733,
+ "dtm_post_m": 1.0096633268711,
+ "hfield_size": [
+  200.0,
+  200.0,
+  8.34798051416874,
+  1.0
+ ]
+}
