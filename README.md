@@ -168,6 +168,19 @@ python scripts/make_gifs.py                   # redraw the animations on this pa
 
 </details>
 
+## Citation
+
+If you use this model in your work, please cite it:
+
+```bibtex
+@software(rampal2026perseverancemujoco,
+  author = {Rampal, Aditya},
+  title = {{Perseverance MuJoCo: a MuJoCo digital twin of NASA's Mars 2020 Perseverance rover, built from the NASA/JPL URDF}},
+  url = {https://github.com/AdityaRampal26/NASA-M2020-Perseverance-Rover---MuJoCo},
+  year = {2026},
+}
+```
+
 ## Credits
 
 - Rover models: NASA/JPL-Caltech, [`nasa-jpl/m2020-urdf-models`](https://github.com/nasa-jpl/m2020-urdf-models)

@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this model in your work, please cite it as below."
+type: software
+title: "Perseverance MuJoCo: a MuJoCo digital twin of NASA's Mars 2020 Perseverance rover, built from the NASA/JPL URDF"
+authors:
+  - family-names: Rampal
+    given-names: Aditya
+repository-code: "https://github.com/AdityaRampal26/NASA-M2020-Perseverance-Rover---MuJoCo"
+url: "https://github.com/AdityaRampal26/NASA-M2020-Perseverance-Rover---MuJoCo"
+license: MIT
+date-released: "2026-10-17"
+keywords:
+  - mujoco
+  - mars-rover
+  - perseverance
+  - rocker-bogie
+  - digital-twin
+  - robotics
