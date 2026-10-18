@@ -152,6 +152,8 @@ python scripts/autonav.py --model course_jezero_boulder.xml --goal 18 6 --span 4
 python scripts/make_gifs.py                   # redraw the animations on this page
 ```
 
+To use the rover modules from your own code, `pip install -e .` in the clone, then `import m2020_drive` or `from autonav import Costmap` from anywhere.
+
 <details>
 <summary><b>Glossary</b> (for anyone new to rovers)</summary>
 
