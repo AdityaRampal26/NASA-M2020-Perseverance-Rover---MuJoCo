@@ -207,8 +207,28 @@ def cmd_validate():
         d.ctrl[A[k]] = 0.161
     for _ in range(30000):
         mujoco.mj_step(m, d)
-    print(f"flat top speed      {(d.qpos[0]-x0)/(d.time-t0)*3600:8.1f} m/h  (published 152)")
+    speed = (d.qpos[0] - x0) / (d.time - t0) * 3600
+    print(f"flat top speed      {speed:8.1f} m/h  (published 152)")
     print("=" * 66)
+
+    # Fail loudly (exit 1) when the model drifts from the published numbers,
+    # so setup.sh and CI catch a regression instead of printing it. Bands are
+    # wide enough for solver noise across MuJoCo versions and platforms.
+    mass = m.body_subtreemass[1]
+    checks = [
+        ("total mass", abs(mass - 1025.0) <= 0.5, f"{mass:.2f} kg, want 1025 +/- 0.5"),
+        ("tip angle", tip >= 45.0, f"{tip:.1f} deg, want >= 45 (NASA rating)"),
+        ("contact force", abs(tot - 1025 * 3.721) <= 0.01 * 1025 * 3.721,
+         f"{tot:.1f} N, want m*g +/- 1%"),
+        ("top speed", abs(speed - 152.0) <= 3.0, f"{speed:.1f} m/h, want 152 +/- 3"),
+    ]
+    failed = [c for c in checks if not c[1]]
+    for name, ok, detail in checks:
+        print(f"  {'PASS' if ok else 'FAIL'}  {name:14s} {detail}")
+    if failed:
+        print(f"{len(failed)} check(s) failed")
+        sys.exit(1)
+    print("all checks passed")
 
 
 if __name__ == "__main__":
