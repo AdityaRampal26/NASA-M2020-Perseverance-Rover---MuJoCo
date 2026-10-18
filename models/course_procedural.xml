@@ -33,7 +33,8 @@
   ===========================================================================
   -->
 
-  <compiler angle="radian" meshdir="assets" autolimits="true" balanceinertia="true"/>
+  <compiler angle="radian" meshdir="assets" texturedir="assets"
+            autolimits="true" balanceinertia="true"/>
   <option timestep="0.002" integrator="implicitfast" cone="elliptic" impratio="10"
           gravity="0 0 -3.721"/>
   <!-- gravity above is Mars (3.721 m/s^2).  For Earth testing use -9.81. -->
@@ -44,7 +45,7 @@
     <global azimuth="130" elevation="-20" offwidth="1920" offheight="1080"/>
     <quality shadowsize="4096" offsamples="8"/>
     <map znear="0.02" zfar="60"/>
-    <headlight ambient="0.35 0.33 0.31" diffuse="0.6 0.58 0.55" specular="0.2 0.2 0.2"/>
+    <headlight ambient="0.22 0.21 0.20" diffuse="0.45 0.43 0.41" specular="0.12 0.12 0.12"/>
   </visual>
 
   <statistic center="0 0 0.8" extent="3.5"/>
@@ -65,6 +66,9 @@
     <material name="dark_alu"   rgba="0.30 0.30 0.32 1" specular="0.5" shininess="0.4"/>
     <material name="ti_wheel"   rgba="0.74 0.73 0.71 1" specular="0.6" shininess="0.5"/>
     <material name="black_ano"  rgba="0.14 0.14 0.15 1" specular="0.35" shininess="0.3"/>
+    <texture name="rover_atlas" type="2d" file="M2020_Rover_Texture.png"/>
+    <material name="rover" texture="rover_atlas" texuniform="false"
+              specular="0.25" shininess="0.3" reflectance="0.0"/>
 
     <mesh name="AbradingBitInTurretAtZeroFeed" file="AbradingBitInTurretAtZeroFeed.obj"/>
     <mesh name="Arm_LINK_1" file="Arm_LINK_1.obj"/>
@@ -159,7 +163,7 @@
 
   <worldbody>
     <light name="sun" directional="true" pos="6 -4 12" dir="-0.45 0.3 -1"
-           diffuse="0.85 0.8 0.72" specular="0.25 0.25 0.25" castshadow="true"/>
+           diffuse="1.05 0.98 0.88" specular="0.3 0.3 0.3" castshadow="true"/>
     <geom name="terrain" type="hfield" hfield="mars" material="regolith"
           pos="0 0 0" contype="2" conaffinity="1" condim="4"
           friction="0.9 0.02 0.001"/>
@@ -260,7 +264,7 @@
     <body name="chassis" pos="0 0 0.05" childclass="m2020">
       <freejoint name="root"/>
       <inertial pos="-0.05 0 0.8" mass="773.600" diaginertia="229.501 376.485 477.053"/>   <!-- EST: uniform box 2.2x1.6x1.0 m -->
-      <geom name="chassis_vis" class="visual" mesh="CHASSIS" pos="0.09002 0 1.13338" material="white_paint"/>
+      <geom name="chassis_vis" class="visual" mesh="CHASSIS" pos="0.09002 0 1.13338" material="rover"/>
       <geom name="belly" class="collision" type="box" size="0.95 0.70 0.26" pos="-0.05 0 0.86"/>
       <geom name="deck_fwd" class="collision" type="box" size="0.30 0.55 0.10" pos="0.95 0 1.10"/>
       <geom name="rtg" class="collision" type="cylinder" size="0.32 0.33" pos="-1.25 0 1.25" euler="0 1.05 0"/>
@@ -273,26 +277,26 @@
       <body name="differential" pos="-0.05198 0 1.13338">
         <inertial pos="-0.000627353 -0.000389981 0.0319518" quat="0.000109073 0.706792 0.707421 -0.000289049" mass="8.000" diaginertia="0.0151665 0.822576 0.832229"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
         <joint name="CENTER_DIFFERENTIAL" type="hinge" axis="0 0 -1" damping="5.0" armature="0.1" frictionloss="1.0"/>   <!-- passive rocker-bogie DOF, no spring -->
-        <geom name="differential_vis" class="visual" mesh="CenterDifferential" pos="0.142 0 0" material="alu"/>
+        <geom name="differential_vis" class="visual" mesh="CenterDifferential" pos="0.142 0 0" material="rover"/>
       </body>
       <body name="rocker_left" pos="0.30402 0.79959 0.89288">
         <inertial pos="-0.00802648 0.0678161 -0.0943319" quat="0.881585 -0.465936 -0.0459325 0.0600138" mass="15.000" diaginertia="0.19857 4.91916 5.0545"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
         <joint name="LEFT_DIFFERENTIAL" type="hinge" axis="0 -1 0" damping="40.0" armature="0.5" frictionloss="5.0"/>   <!-- passive rocker-bogie DOF, no spring -->
-        <geom name="rocker_left_vis" class="visual" mesh="Left_Rocker" pos="-0.214 -0.79959 0.2405" material="white_paint"/>
+        <geom name="rocker_left_vis" class="visual" mesh="Left_Rocker" pos="-0.214 -0.79959 0.2405" material="rover"/>
         <geom name="rocker_l_col" class="collision" type="capsule" fromto="-0.754 0.12 -0.23 0.881 0.26291 -0.306502" size="0.065"/>
         <body name="bogie_left" pos="-0.754 0.12 -0.23">
           <inertial pos="0.067464 0.0649075 -0.133483" quat="0.930922 -0.302006 0.194318 0.0664639" mass="11.000" diaginertia="0.211753 2.16036 2.32419"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
           <joint name="LEFT_BOGIE" type="hinge" axis="0 -1 0" damping="20.0" armature="0.3" frictionloss="3.0"/>   <!-- passive rocker-bogie DOF, no spring -->
-          <geom name="bogie_left_vis" class="visual" mesh="Left_Bogie" pos="0.54 -0.91959 0.4705" material="white_paint"/>
+          <geom name="bogie_left_vis" class="visual" mesh="Left_Bogie" pos="0.54 -0.91959 0.4705" material="rover"/>
           <geom name="bogie_l_col" class="collision" type="capsule" fromto="-0.625 0.14291 -0.4 0.44998 0.26491 -0.4" size="0.055"/>
           <body name="steer_left_rear" pos="-0.625 0.14291 -0.4">
             <inertial pos="-0.00193104 -0.132474 0.197197" quat="0.702648 0.0200114 -0.710932 -0.0214726" mass="6.000" diaginertia="0.0944909 0.167707 0.240258"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
             <joint name="LR_STEER" class="steer" axis="0 0 -1"/>
-            <geom name="steer_left_rear_vis" class="visual" mesh="Steer_LeftRear" pos="1.165 -1.0625 0.8705" material="alu"/>
+            <geom name="steer_left_rear_vis" class="visual" mesh="Steer_LeftRear" pos="1.165 -1.0625 0.8705" material="rover"/>
             <body name="wheel_left_rear" pos="0 0 0">
               <inertial pos="-0.000211828 0.0110533 -0.000311276" quat="0.647628 0.647436 0.28402 -0.284143" mass="8.000" diaginertia="0.291129 0.291176 0.439303"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
               <joint name="LR_DRIVE" class="drive" axis="0 1 0"/>
-              <geom name="wheel_left_rear_vis" class="visual" mesh="Wheel_LeftRear" pos="1.165 -1.0625 0.8705" material="ti_wheel"/>
+              <geom name="wheel_left_rear_vis" class="visual" mesh="Wheel_LeftRear" pos="1.165 -1.0625 0.8705" material="rover"/>
               <geom name="wheel_lr" class="wheel" euler="1.5708 0 0"/>   <!-- r=0.2625 m from published 1.65 m/rev -->
               <!-- 48 grousers (cleats).  The flight wheels have 48; they are what lets the rover hook and climb a step taller than a smooth cylinder ever could. -->
               <geom name="wheel_lr_g00" class="grouser" pos="0.2585 0 0" euler="0 -0.00000 0"/>
@@ -348,7 +352,7 @@
           <body name="wheel_left_middle" pos="0.44998 0.26491 -0.4">
             <inertial pos="-0.000159273 0.00905312 -0.000312186" quat="-0.382253 0.382343 0.594955 0.594747" mass="8.000" diaginertia="0.291129 0.291176 0.439303"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
             <joint name="LM_DRIVE" class="drive" axis="0 1 0"/>
-            <geom name="wheel_left_middle_vis" class="visual" mesh="Wheel_LeftMiddle" pos="0.09002 -1.1845 0.8705" material="ti_wheel"/>
+            <geom name="wheel_left_middle_vis" class="visual" mesh="Wheel_LeftMiddle" pos="0.09002 -1.1845 0.8705" material="rover"/>
             <geom name="wheel_lm" class="wheel" euler="1.5708 0 0"/>   <!-- r=0.2625 m from published 1.65 m/rev -->
             <!-- 48 grousers (cleats).  The flight wheels have 48; they are what lets the rover hook and climb a step taller than a smooth cylinder ever could. -->
             <geom name="wheel_lm_g00" class="grouser" pos="0.2585 0 0" euler="0 -0.00000 0"/>
@@ -404,11 +408,11 @@
         <body name="steer_left_front" pos="0.881 0.26291 -0.63">
           <inertial pos="-0.00702255 -0.148807 0.223452" quat="0.684073 -0.194485 -0.68205 0.170372" mass="6.000" diaginertia="0.13268 0.148144 0.253969"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
           <joint name="LF_STEER" class="steer" axis="0 0 -1"/>
-          <geom name="steer_left_front_vis" class="visual" mesh="Steer_LeftFront" pos="-1.095 -1.0625 0.8705" material="alu"/>
+          <geom name="steer_left_front_vis" class="visual" mesh="Steer_LeftFront" pos="-1.095 -1.0625 0.8705" material="rover"/>
           <body name="wheel_left_front" pos="0 0 0">
             <inertial pos="-0.000211471 0.0110532 -0.000311297" quat="0.646106 0.645915 0.287463 -0.287586" mass="8.000" diaginertia="0.291129 0.291176 0.439303"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
             <joint name="LF_DRIVE" class="drive" axis="0 1 0"/>
-            <geom name="wheel_left_front_vis" class="visual" mesh="Wheel_LeftFront" pos="-1.095 -1.0625 0.8705" material="ti_wheel"/>
+            <geom name="wheel_left_front_vis" class="visual" mesh="Wheel_LeftFront" pos="-1.095 -1.0625 0.8705" material="rover"/>
             <geom name="wheel_lf" class="wheel" euler="1.5708 0 0"/>   <!-- r=0.2625 m from published 1.65 m/rev -->
             <!-- 48 grousers (cleats).  The flight wheels have 48; they are what lets the rover hook and climb a step taller than a smooth cylinder ever could. -->
             <geom name="wheel_lf_g00" class="grouser" pos="0.2585 0 0" euler="0 -0.00000 0"/>
@@ -465,21 +469,21 @@
       <body name="rocker_right" pos="0.30402 -0.79959 0.89288">
         <inertial pos="-0.00802648 -0.0678161 -0.0943319" quat="-0.465936 0.881585 -0.0600138 0.0459325" mass="15.000" diaginertia="0.19857 4.91916 5.0545"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
         <joint name="RIGHT_DIFFERENTIAL" type="hinge" axis="0 -1 0" damping="40.0" armature="0.5" frictionloss="5.0"/>   <!-- passive rocker-bogie DOF, no spring -->
-        <geom name="rocker_right_vis" class="visual" mesh="Right_Rocker" pos="-0.214 0.79959 0.2405" material="white_paint"/>
+        <geom name="rocker_right_vis" class="visual" mesh="Right_Rocker" pos="-0.214 0.79959 0.2405" material="rover"/>
         <geom name="rocker_r_col" class="collision" type="capsule" fromto="-0.754 -0.12 -0.23 0.881 -0.26291 -0.306502" size="0.065"/>
         <body name="bogie_right" pos="-0.754 -0.12 -0.23">
           <inertial pos="0.067464 -0.0649075 -0.133483" quat="-0.302006 0.930922 -0.0664639 -0.194318" mass="11.000" diaginertia="0.211753 2.16036 2.32419"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
           <joint name="RIGHT_BOGIE" type="hinge" axis="0 -1 0" damping="20.0" armature="0.3" frictionloss="3.0"/>   <!-- passive rocker-bogie DOF, no spring -->
-          <geom name="bogie_right_vis" class="visual" mesh="Right_Bogie" pos="0.54 0.91959 0.4705" material="white_paint"/>
+          <geom name="bogie_right_vis" class="visual" mesh="Right_Bogie" pos="0.54 0.91959 0.4705" material="rover"/>
           <geom name="bogie_r_col" class="collision" type="capsule" fromto="-0.625 -0.14291 -0.4 0.44998 -0.26491 -0.4" size="0.055"/>
           <body name="steer_right_rear" pos="-0.625 -0.14291 -0.4">
             <inertial pos="-0.00193104 0.132474 0.197197" quat="0.0214726 0.710932 -0.0200114 -0.702648" mass="6.000" diaginertia="0.0944909 0.167707 0.240258"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
             <joint name="RR_STEER" class="steer" axis="0 0 -1"/>
-            <geom name="steer_right_rear_vis" class="visual" mesh="Steer_RightRear" pos="1.165 1.0625 0.8705" material="alu"/>
+            <geom name="steer_right_rear_vis" class="visual" mesh="Steer_RightRear" pos="1.165 1.0625 0.8705" material="rover"/>
             <body name="wheel_right_rear" pos="0 0 0">
               <inertial pos="-0.000128881 -0.0110635 -0.000330667" quat="0.697817 -0.697664 -0.114625 -0.114794" mass="8.000" diaginertia="0.291128 0.291176 0.439302"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
               <joint name="RR_DRIVE" class="drive" axis="0 1 0"/>
-              <geom name="wheel_right_rear_vis" class="visual" mesh="Wheel_RightRear" pos="1.165 1.0625 0.8705" material="ti_wheel"/>
+              <geom name="wheel_right_rear_vis" class="visual" mesh="Wheel_RightRear" pos="1.165 1.0625 0.8705" material="rover"/>
               <geom name="wheel_rr" class="wheel" euler="1.5708 0 0"/>   <!-- r=0.2625 m from published 1.65 m/rev -->
               <!-- 48 grousers (cleats).  The flight wheels have 48; they are what lets the rover hook and climb a step taller than a smooth cylinder ever could. -->
               <geom name="wheel_rr_g00" class="grouser" pos="0.2585 0 0" euler="0 -0.00000 0"/>
@@ -535,7 +539,7 @@
           <body name="wheel_right_middle" pos="0.44998 -0.26491 -0.4">
             <inertial pos="-0.000190202 -0.0110532 -0.000310813" quat="0.353003 0.353104 0.612762 -0.61256" mass="8.000" diaginertia="0.291129 0.291176 0.439303"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
             <joint name="RM_DRIVE" class="drive" axis="0 1 0"/>
-            <geom name="wheel_right_middle_vis" class="visual" mesh="Wheel_RightMiddle" pos="0.09002 1.1845 0.8705" material="ti_wheel"/>
+            <geom name="wheel_right_middle_vis" class="visual" mesh="Wheel_RightMiddle" pos="0.09002 1.1845 0.8705" material="rover"/>
             <geom name="wheel_rm" class="wheel" euler="1.5708 0 0"/>   <!-- r=0.2625 m from published 1.65 m/rev -->
             <!-- 48 grousers (cleats).  The flight wheels have 48; they are what lets the rover hook and climb a step taller than a smooth cylinder ever could. -->
             <geom name="wheel_rm_g00" class="grouser" pos="0.2585 0 0" euler="0 -0.00000 0"/>
@@ -591,11 +595,11 @@
         <body name="steer_right_front" pos="0.881 -0.26291 -0.63">
           <inertial pos="-0.00702255 0.148807 0.223452" quat="0.684073 0.194485 -0.68205 -0.170372" mass="6.000" diaginertia="0.13268 0.148144 0.253969"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
           <joint name="RF_STEER" class="steer" axis="0 0 -1"/>
-          <geom name="steer_right_front_vis" class="visual" mesh="Steer_RightFront" pos="-1.095 1.0625 0.8705" material="alu"/>
+          <geom name="steer_right_front_vis" class="visual" mesh="Steer_RightFront" pos="-1.095 1.0625 0.8705" material="rover"/>
           <body name="wheel_right_front" pos="0 0 0">
             <inertial pos="-0.000139358 -0.0110536 -0.0003304" quat="0.698228 -0.698077 -0.112088 -0.11226" mass="8.000" diaginertia="0.291127 0.291177 0.439303"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
             <joint name="RF_DRIVE" class="drive" axis="0 1 0"/>
-            <geom name="wheel_right_front_vis" class="visual" mesh="Wheel_RightFront" pos="-1.095 1.0625 0.8705" material="ti_wheel"/>
+            <geom name="wheel_right_front_vis" class="visual" mesh="Wheel_RightFront" pos="-1.095 1.0625 0.8705" material="rover"/>
             <geom name="wheel_rf" class="wheel" euler="1.5708 0 0"/>   <!-- r=0.2625 m from published 1.65 m/rev -->
             <!-- 48 grousers (cleats).  The flight wheels have 48; they are what lets the rover hook and climb a step taller than a smooth cylinder ever could. -->
             <geom name="wheel_rf_g00" class="grouser" pos="0.2585 0 0" euler="0 -0.00000 0"/>
@@ -652,11 +656,11 @@
       <body name="rsm_az" pos="0.804037 -0.559028 1.91927" quat="-0.00872622 0 0 0.999962">
         <inertial pos="0.000520831 0.00155855 -0.146047" quat="0.513362 0.495519 0.479921 -0.510485" mass="10.000" diaginertia="0.0647743 0.0821329 0.0844003"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
         <joint name="RSM_AZ_ENC" class="mast" type="hinge" axis="0 0 -1" range="-3.16 3.16"/>   <!-- EST range -->
-        <geom name="rsm_az_vis" class="visual" mesh="RSM" pos="-0.714017 0.559028 -0.78589" material="white_paint"/>
+        <geom name="rsm_az_vis" class="visual" mesh="RSM" pos="-0.714017 0.559028 -0.78589" material="rover"/>
         <body name="rsm_el" pos="0 0 0" quat="0.700908 -1.8763e-06 0.713252 1.8763e-06">
           <inertial pos="-0.00179967 0.0419056 0.087084" quat="0.557253 0.426381 -0.623679 -0.344519" mass="15.000" diaginertia="0.265186 0.493814 0.567875"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
           <joint name="RSM_EL_ENC" class="mast" type="hinge" axis="0 -1 0" range="-3.12 0.03"/>   <!-- EST range -->
-          <geom name="rsm_el_vis" class="visual" mesh="RSM_Head" pos="-0.714017 0.559028 -0.78589" material="white_paint"/>
+          <geom name="rsm_el_vis" class="visual" mesh="RSM_Head" pos="-0.714017 0.559028 -0.78589" material="rover"/>
           <camera name="mcam_z_left_z034" pos="0.033045 0.123723 0.065576" quat="-0.495357 -0.492513 0.507594 0.504381" fovy="14.690"/>   <!-- JPL CAHV(ORE) calibration -->
           <camera name="mcam_z_left_z110" pos="0.024345 0.123651 0.065922" quat="-0.498945 -0.493543 0.5041 0.503341" fovy="4.638"/>   <!-- JPL CAHV(ORE) calibration -->
           <camera name="mcam_z_right_z034" pos="0.03613 -0.119613 0.066001" quat="0.504994 0.506539 -0.492224 -0.496099" fovy="14.669"/>   <!-- JPL CAHV(ORE) calibration -->
@@ -669,68 +673,68 @@
       <body name="hga_az" pos="-0.36998 0.475 1.13288" quat="0.976296 0 0 -0.216439">
         <inertial pos="-0.0393262 5.79069e-06 0.177751" quat="0.658168 -0.656141 0.260803 0.261295" mass="7.000" diaginertia="0.0264636 0.0501305 0.057472"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
         <joint name="HGA_AZ" class="mast" type="hinge" axis="0 0 -1" range="-3.142 3.142"/>   <!-- EST range -->
-        <geom name="hga_az_vis" class="visual" mesh="HGA_AZ" pos="0.46 -0.475 0.0005" material="alu"/>
+        <geom name="hga_az_vis" class="visual" mesh="HGA_AZ" pos="0.46 -0.475 0.0005" material="rover"/>
         <body name="hga_el" pos="0 0 0.248" quat="0.92388 0.382683 0 0">
           <inertial pos="0.182771 -0.000748074 4.73289e-05" quat="0.921863 -0.383256 -0.0528784 0.0220876" mass="8.000" diaginertia="0.0477912 0.0660934 0.0955597"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
           <joint name="HGA_EL" class="mast" type="hinge" axis="1 0 0" range="-0.087 1.571"/>   <!-- EST range -->
-          <geom name="hga_el_vis" class="visual" mesh="HGA_EL" pos="0.46 -0.475 -0.2475" material="mli_gold"/>
+          <geom name="hga_el_vis" class="visual" mesh="HGA_EL" pos="0.46 -0.475 -0.2475" material="rover"/>
         </body>
       </body>
       <body name="ra_base" pos="0.09002 0 1.13338">
         <body name="ra_link1" pos="1.1756 0.4515 -0.3116">
           <inertial pos="0.0882805 -0.0285463 0.0383535" quat="0.911036 -0.25468 0.175857 -0.272445" mass="12.000" diaginertia="0.128945 0.159773 0.189188"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
           <joint name="JOINT1_ENC" class="arm" type="hinge" axis="0 0 -1" range="-3.142 1.571"/>   <!-- EST range -->
-          <geom name="ra_link1_vis" class="visual" mesh="Arm_LINK_1" pos="-1.1756 -0.4515 0.3116" material="white_paint"/>
+          <geom name="ra_link1_vis" class="visual" mesh="Arm_LINK_1" pos="-1.1756 -0.4515 0.3116" material="rover"/>
           <body name="ra_link2" pos="0.166 0 0">
             <inertial pos="0.446863 -0.196444 0.0277727" quat="0.984731 -0.174083 0.000504375 -0.000125699" mass="9.000" diaginertia="0.0275748 0.808686 0.821151"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
             <joint name="JOINT2_ENC" class="arm" type="hinge" axis="0 1 0" range="-1.396 0.785"/>   <!-- EST range -->
-            <geom name="ra_link2_vis" class="visual" mesh="Arm_LINK_2" pos="-1.3416 -0.4515 0.3116" material="white_paint"/>
+            <geom name="ra_link2_vis" class="visual" mesh="Arm_LINK_2" pos="-1.3416 -0.4515 0.3116" material="rover"/>
             <geom name="ra_link2_col" class="collision" type="capsule" fromto="0 0 0 0.8194 0 0" size="0.07"/>
             <body name="ra_link3" pos="0.8194 0 0">
               <inertial pos="0.301225 -0.0259591 -0.0220227" quat="0.997275 0.072433 0.00547577 0.0128865" mass="8.000" diaginertia="0.0617412 0.793271 0.809212"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
               <joint name="JOINT3_ENC" class="arm" type="hinge" axis="0 1 0" range="-3.142 0.175"/>   <!-- EST range -->
-              <geom name="ra_link3_vis" class="visual" mesh="Arm_LINK_3" pos="-2.161 -0.4515 0.3116" material="white_paint"/>
+              <geom name="ra_link3_vis" class="visual" mesh="Arm_LINK_3" pos="-2.161 -0.4515 0.3116" material="rover"/>
               <geom name="ra_link3_col" class="collision" type="capsule" fromto="0 0 0 0.7533 0 0" size="0.06"/>
               <body name="ra_link4" pos="0.7533 0 0">
                 <inertial pos="-0.101441 -0.167831 0.0256536" quat="0.626008 0.762154 -0.0239754 0.163279" mass="4.000" diaginertia="0.0249194 0.0420897 0.051927"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
                 <joint name="JOINT4_ENC" class="arm" type="hinge" axis="0 1 0" range="-3.054 3.054"/>   <!-- EST range -->
-                <geom name="ra_link4_vis" class="visual" mesh="Arm_LINK_4" pos="-2.9143 -0.4515 0.3116" material="white_paint"/>
+                <geom name="ra_link4_vis" class="visual" mesh="Arm_LINK_4" pos="-2.9143 -0.4515 0.3116" material="rover"/>
                 <geom name="ra_link4_col" class="collision" type="capsule" fromto="0 0 0 -0.1757 -0.1791 0" size="0.055"/>
                 <body name="ra_link5" pos="-0.1757 -0.1791 0">
                   <inertial pos="-0.000585697 -0.00401651 0.145321" quat="0.0460353 0.997693 -0.0109934 0.048668" mass="2.000" diaginertia="0.0125336 0.0128056 0.0160205"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
                   <joint name="JOINT5_ENC" class="arm" type="hinge" axis="0 0 -1" range="-3.142 3.142"/>   <!-- EST range -->
-                  <geom name="ra_link5_vis" class="visual" mesh="Arm_LINK_5" pos="-2.7386 -0.2724 0.3116" material="white_paint"/>
+                  <geom name="ra_link5_vis" class="visual" mesh="Arm_LINK_5" pos="-2.7386 -0.2724 0.3116" material="rover"/>
                   <body name="turret" pos="-2.7386 -0.2724 0.3116">
                     <inertial pos="2.70258 0.28315 -0.0080652" quat="0.966846 0.0458345 -0.0294406 0.249484" mass="40.000" diaginertia="1.17317 1.27642 2.02052"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
-                    <geom name="turret_vis" class="visual" mesh="Turret" pos="0 0 0" material="dark_alu"/>
+                    <geom name="turret_vis" class="visual" mesh="Turret" pos="0 0 0" material="rover"/>
                     <geom name="turret_col" class="collision" type="cylinder" size="0.27 0.16" pos="2.72195 0.265607 0.0079265"/>
                     <camera name="sherloc_camera" pos="2.83915 0.461429 0.290371" quat="0.656975 0.713477 0.000910816 -0.243583" fovy="4.230"/>   <!-- JPL CAHV(ORE) calibration -->
                     <camera name="watson" pos="2.63143 0.565478 0.340546" quat="0.57981 0.406986 0.578723 -0.404057" fovy="23.534"/>   <!-- JPL CAHV(ORE) calibration -->
                     <body name="corer_feed" pos="2.5301 0.272349 0.0168656">
                       <inertial pos="0.437726 0.000157093 -3.62898e-05" quat="0.983457 0.181136 0.000835179 0.00126546" mass="3.000" diaginertia="0.00130472 0.00448887 0.00451386"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
                       <joint name="DRILL_FEED" type="slide" axis="1 0 0" range="0.0 0.15" damping="600" armature="0.4"/>   <!-- EST stroke -->
-                      <geom name="corer_feed_vis" class="visual" mesh="AbradingBitInTurretAtZeroFeed" pos="0.208499 5.1e-05 3.438e-05" material="alu"/>
+                      <geom name="corer_feed_vis" class="visual" mesh="AbradingBitInTurretAtZeroFeed" pos="0.208499 5.1e-05 3.438e-05" material="rover"/>
                       <site name="drill_tip" pos="0.497278 -2.78e-05 0.00033828" size="0.02" rgba="1 0 0 0.8"/>
                     </body>
                     <body name="stabilizer_far" pos="2.5301 0.272349 0.0168656">
                       <inertial pos="0.313809 5.14613e-05 -0.0785275" quat="0.000202708 1 2.20334e-06 -0.000284808" mass="0.500" diaginertia="7.39725e-05 0.0141974 0.0141977"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
                       <joint name="STABILIZER_LOWER" type="slide" axis="-1 0 0" range="0.0 0.1" damping="600" armature="0.4"/>   <!-- EST stroke -->
-                      <geom name="stabilizer_far_vis" class="visual" mesh="StabilizerFarInTurret" pos="0.208499 5.1e-05 3.438e-05" material="alu"/>
+                      <geom name="stabilizer_far_vis" class="visual" mesh="StabilizerFarInTurret" pos="0.208499 5.1e-05 3.438e-05" material="rover"/>
                     </body>
                     <body name="stabilizer_near" pos="2.5301 0.272349 0.0168656">
                       <inertial pos="0.313678 5.08183e-05 0.078594" quat="0.000413825 1 -9.2428e-07 0.000275047" mass="0.500" diaginertia="7.39552e-05 0.0141885 0.0141888"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
                       <joint name="STABILIZER_UPPER" type="slide" axis="-1 0 0" range="0.0 0.1" damping="600" armature="0.4"/>   <!-- EST stroke -->
-                      <geom name="stabilizer_near_vis" class="visual" mesh="StabilizerNearInTurret" pos="0.208499 5.1e-05 3.438e-05" material="alu"/>
+                      <geom name="stabilizer_near_vis" class="visual" mesh="StabilizerNearInTurret" pos="0.208499 5.1e-05 3.438e-05" material="rover"/>
                     </body>
                     <body name="watson_cap" pos="2.6025 0.581204 0.0309103">
                       <inertial pos="0.0205943 0.00914849 0.000205484" quat="0.686346 -0.574023 -0.413471 -0.168726" mass="0.200" diaginertia="3.43227e-05 3.57813e-05 6.95998e-05"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
                       <joint name="WATSON_CAP_ENC" class="arm" type="hinge" axis="0 0 1" range="0.0 2.094"/>   <!-- EST range -->
-                      <geom name="watson_cap_vis" class="visual" mesh="WATSON_Camera_Cap" pos="-2.6025 -0.581204 -0.0309103" material="alu"/>
+                      <geom name="watson_cap_vis" class="visual" mesh="WATSON_Camera_Cap" pos="-2.6025 -0.581204 -0.0309103" material="rover"/>
                     </body>
                     <body name="sherloc_cap" pos="2.86084 0.58439 -0.0124626">
                       <inertial pos="0.0202246 -0.00565353 -0.00716068" quat="0.685735 -0.70602 0.0448784 -0.171138" mass="0.200" diaginertia="3.2308e-05 3.70471e-05 6.86669e-05"/>   <!-- EST mass; inertia from mesh (thin-shell) -->
                       <joint name="SHERLOC_CAP_ENC" class="arm" type="hinge" axis="0 0 1" range="0.0 2.094"/>   <!-- EST range -->
-                      <geom name="sherloc_cap_vis" class="visual" mesh="ContextImager_Cap" pos="-2.86084 -0.58439 0.0124626" material="alu"/>
+                      <geom name="sherloc_cap_vis" class="visual" mesh="ContextImager_Cap" pos="-2.86084 -0.58439 0.0124626" material="rover"/>
                     </body>
                   </body>
                 </body>
