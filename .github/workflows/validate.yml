@@ -1,0 +1,65 @@
+# Runs the one-time setup (which ends with `demo.py validate`) and the tests
+# on Linux and Windows, so a change that breaks the model, the mesh
+# conversion, the steering or planner maths, or either setup script shows
+# up on the pull request.
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  setup-and-validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      # JPL's rover models (~110 MB) only change when JPL cuts a release.
+      - uses: actions/cache@v4
+        with:
+          path: m2020-urdf-models
+          key: m2020-urdf-models-v1
+
+      - name: Setup and validate (Linux)
+        if: runner.os == 'Linux'
+        run: bash setup.sh
+
+      - name: Setup and validate (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./setup.ps1
+
+      # Steering, hazard map and A* tests on both, plus the 13-camera render
+      # check on Linux with software OpenGL (OSMesa). Windows runners have no
+      # usable OpenGL (1.1 only), so the render test is left out there.
+      - name: Install OSMesa (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libosmesa6
+
+      - name: Tests (Linux)
+        if: runner.os == 'Linux'
+        env:
+          MUJOCO_GL: osmesa
+          PYOPENGL_PLATFORM: osmesa
+          REQUIRE_RENDER: "1"
+        run: |
+          .venv/bin/python -m pip install --quiet -r requirements-dev.txt
+          .venv/bin/python -m pytest -v tests
+
+      - name: Tests (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          .venv\Scripts\python.exe -m pip install --quiet -r requirements-dev.txt
+          .venv\Scripts\python.exe -m pytest -v tests --ignore=tests/test_render.py
