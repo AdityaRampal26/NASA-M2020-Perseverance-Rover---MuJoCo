@@ -1,0 +1,25 @@
+{
+ "source": "HiRISE DTEEC_018854_1755_018920_1755_U01 (USGS/UA, PDS3)",
+ "source_url": "https://www.uahirise.org/PDS/DTM/ESP/ORB_018800_018899/ESP_018854_1755_ESP_018920_1755/DTEEC_018854_1755_018920_1755_U01.IMG",
+ "product_page": "https://www.uahirise.org/dtm/dtm.php?ID=ESP_018854_1755",
+ "site_title": "Gale Crater",
+ "site_lat": -4.5895,
+ "site_lon": 137.4392,
+ "site_name": "150 m west of Bradbury Landing",
+ "patch_m": 400.0,
+ "grid": 513,
+ "post_m": 0.78125,
+ "elev_min_m": -4495.480355858803,
+ "elev_max_m": -4489.441305335611,
+ "relief_m": 6.0390505231916904,
+ "slope_mean_deg": 3.4472380896297072,
+ "slope_p95_deg": 7.50328526248452,
+ "slope_max_deg": 26.76018527740862,
+ "dtm_post_m": 1.0117630165416,
+ "hfield_size": [
+  200.0,
+  200.0,
+  6.0390505231916904,
+  1.0
+ ]
+}

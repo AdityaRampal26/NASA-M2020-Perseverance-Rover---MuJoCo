@@ -111,7 +111,8 @@ def rocks_xml(seed, half_extent, n_rocks):
 
 
 def build_jezero(src, args):
-    """Swap the flat plane for the real HiRISE Jezero heightfield.
+    """Swap the flat plane for a real HiRISE heightfield (Jezero by default;
+    any site fetch_jezero.py has written to assets/<args.dtm>.png + .json).
 
     Terrain heights are found by ray-casting against the *compiled* model
     rather than by indexing the PNG. MuJoCo stores hfield rows flipped
@@ -122,22 +123,26 @@ def build_jezero(src, args):
     import json
     import mujoco
 
-    meta_path = os.path.join(HERE, "assets", "jezero.json")
-    png = os.path.join(HERE, "assets", "jezero.png")
+    name = args.dtm
+    meta_path = os.path.join(HERE, "assets", f"{name}.json")
+    png = os.path.join(HERE, "assets", f"{name}.png")
     if not (os.path.exists(png) and os.path.exists(meta_path)):
-        raise SystemExit("assets/jezero.png not found -- run:  "
-                         "python scripts/fetch_jezero.py")
+        fetch = "" if name == "jezero" else (
+            f" --site {name}" if name == "gale" else f" --url ... --name {name}")
+        raise SystemExit(f"assets/{name}.png not found -- run:  "
+                         f"python scripts/fetch_jezero.py{fetch}")
     meta = json.load(open(meta_path))
     rx, ry, zt, zb = meta["hfield_size"]
+    title = meta.get("site_title", "Jezero Crater")   # older jezero.json has none
 
-    hf = (f'    <hfield name="jezero" file="jezero.png" '
+    hf = (f'    <hfield name="{name}" file="{name}.png" '
           f'size="{rx} {ry} {zt:.4f} {zb}"/>')
     old_plane = ('<geom name="terrain" type="plane" size="60 60 0.5" material="regolith"\n'
                  '          contype="2" conaffinity="1" condim="4" friction="0.9 0.02 0.001"/>')
     if old_plane not in src:
         raise SystemExit("terrain plane not found in the model XML")
     new_terrain = (
-        '<geom name="terrain" type="hfield" hfield="jezero" material="regolith"\n'
+        f'<geom name="terrain" type="hfield" hfield="{name}" material="regolith"\n'
         '          pos="0 0 0" contype="2" conaffinity="1" condim="4"\n'
         '          friction="0.9 0.02 0.001"/>')
 
@@ -227,9 +232,11 @@ def build_jezero(src, args):
     scene = scene.replace('<statistic center="0 0 0.8" extent="3.5"/>',
                           f'<statistic center="0 0 {spawn + 0.8:.2f}" extent="3.5"/>')
 
-    site = meta.get("site_name") or f'{meta["site_lat"]:.4f}N {meta["site_lon"]:.4f}E'
-    banner = (f'\n  <!-- TERRAIN: real HiRISE DTM of Jezero Crater.\n'
-              f'       site      {site} ({meta["site_lat"]:.4f} N, {meta["site_lon"]:.4f} E)\n'
+    lat = meta["site_lat"]
+    ns = f'{abs(lat):.4f} {"N" if lat >= 0 else "S"}'
+    site = meta.get("site_name") or f'{ns} {meta["site_lon"]:.4f}E'
+    banner = (f'\n  <!-- TERRAIN: real HiRISE DTM of {title}.\n'
+              f'       site      {site} ({ns}, {meta["site_lon"]:.4f} E)\n'
               f'       patch     {meta["patch_m"]:.0f} x {meta["patch_m"]:.0f} m at '
               f'{meta["post_m"]:.2f} m/post (DTM native {meta["dtm_post_m"]:.4f} m)\n'
               f'       elevation {meta["elev_min_m"]:.1f} to {meta["elev_max_m"]:.1f} m '
@@ -242,7 +249,7 @@ def build_jezero(src, args):
               f'       statistically -- a 1 m/post DTM cannot resolve them. -->\n')
     scene = scene.replace('<mujoco model="M2020 Perseverance">',
                           '<mujoco model="M2020 Perseverance">' + banner, 1)
-    print(f"wrote {args.out}  [real Jezero DTM: {site}]")
+    print(f"wrote {args.out}  [real {title} DTM: {site}]")
     print(f"  {meta['patch_m']:.0f} m patch, {meta['relief_m']:.2f} m relief, "
           f"{len(parts)} rocks, spawn z={spawn:.2f} m")
     return scene
@@ -252,7 +259,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", default="m2020_perseverance.xml")
     ap.add_argument("--out", default=None,
-                    help="default: course_jezero.xml with --jezero, "
+                    help="default: course_<dtm>.xml with --jezero/--dtm, "
                          "course_procedural.xml otherwise")
     ap.add_argument("--seed", type=int, default=3)
     ap.add_argument("--relief", type=float, default=1.1,
@@ -265,15 +272,20 @@ def main():
                     help="keep the flat plane, just add rocks")
     ap.add_argument("--jezero", action="store_true",
                     help="use the real HiRISE Jezero DTM patch built by "
-                         "fetch_jezero.py (assets/jezero.png)")
+                         "fetch_jezero.py (assets/jezero.png); same as --dtm jezero")
+    ap.add_argument("--dtm", default=None, metavar="NAME",
+                    help="use any DTM patch fetch_jezero.py wrote to "
+                         "assets/NAME.png, e.g. --dtm gale")
     args = ap.parse_args()
+    if args.jezero and args.dtm is None:
+        args.dtm = "jezero"
     if args.out is None:
-        args.out = "course_jezero.xml" if args.jezero else "course_procedural.xml"
+        args.out = f"course_{args.dtm}.xml" if args.dtm else "course_procedural.xml"
 
     src = open(os.path.join(HERE, args.model)).read()
     rocks = rocks_xml(args.seed, args.extent, args.rocks)
 
-    if args.jezero:
+    if args.dtm:
         scene = build_jezero(src, args)
         open(os.path.join(HERE, args.out), "w").write(scene)
         return

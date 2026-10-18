@@ -29,6 +29,7 @@ They are not included in this repository: setup.sh downloads that release and
 converts it locally, and the files remain subject to NASA/JPL's terms. The
 model geometry and camera placements in the MJCF are derived from the same
 release. The Jezero terrain is derived from the HiRISE stereo DTM
-DTEEC_045994_1985_046060_1985_U01 (NASA/JPL/University of Arizona/USGS).
+DTEEC_045994_1985_046060_1985_U01 and the Gale terrain from
+DTEEC_018854_1755_018920_1755_U01 (both NASA/JPL/University of Arizona/USGS).
 The MIT license above covers only the code and documentation written for this
 project.
