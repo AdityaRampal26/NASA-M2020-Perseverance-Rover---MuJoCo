@@ -1,0 +1,40 @@
+# Runs the one-time setup (which ends with `demo.py validate`) on Linux and
+# Windows, so a change that breaks the model, the mesh conversion or either
+# setup script shows up on the pull request.
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  setup-and-validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      # JPL's rover models (~110 MB) only change when JPL cuts a release.
+      - uses: actions/cache@v4
+        with:
+          path: m2020-urdf-models
+          key: m2020-urdf-models-v1
+
+      - name: Setup and validate (Linux)
+        if: runner.os == 'Linux'
+        run: bash setup.sh
+
+      - name: Setup and validate (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./setup.ps1

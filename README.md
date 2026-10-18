@@ -152,6 +152,8 @@ python scripts/autonav.py --model course_jezero_boulder.xml --goal 18 6 --span 4
 python scripts/make_gifs.py                   # redraw the animations on this page
 ```
 
+On Windows, run `powershell -ExecutionPolicy Bypass -File setup.ps1`, then `.venv\Scripts\Activate.ps1`, and use `python` for every script, including `teleop.py`.
+
 <details>
 <summary><b>Glossary</b> (for anyone new to rovers)</summary>
 
