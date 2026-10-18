@@ -19,3 +19,7 @@ models/assets/*.obj
 models/assets/M2020_Rover_Texture.png
 
 _to_delete/
+
+# pip install -e . build metadata
+*.egg-info/
+build/

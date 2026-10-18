@@ -1,0 +1,56 @@
+# Lets `pip install -e .` put the scripts/ modules on the import path, so other
+# projects can `import m2020_drive` or `from autonav import Costmap` without
+# copying files. The scripts find models/ relative to their own location, so
+# install it editable from a clone (setup.sh / setup.ps1 still use
+# requirements.txt and keep working as before).
+
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "perseverance-mujoco"
+version = "0.1.0"
+description = "A MuJoCo digital twin of NASA's Mars 2020 Perseverance rover, built from the NASA/JPL URDF"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Aditya Rampal" }]
+requires-python = ">=3.10"
+dependencies = [
+    "mujoco>=3.1,<4",
+    "numpy",
+    "scipy",
+    "pillow",
+    "imageio",
+    "imageio-ffmpeg",
+    "trimesh",
+    "matplotlib",
+]
+keywords = ["mujoco", "mars", "perseverance", "rover", "rocker-bogie", "robotics", "simulation"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Scientific/Engineering :: Astronomy",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.urls]
+Repository = "https://github.com/AdityaRampal26/NASA-M2020-Perseverance-Rover---MuJoCo"
+
+[tool.setuptools]
+package-dir = { "" = "scripts" }
+py-modules = [
+    "autonav",
+    "build_m2020",
+    "demo",
+    "fetch_jezero",
+    "m2020_drive",
+    "make_course",
+    "make_gifs",
+    "plot_drive",
+    "teleop",
+    "terrain_probe",
+]
