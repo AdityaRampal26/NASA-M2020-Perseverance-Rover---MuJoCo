@@ -16,6 +16,7 @@ Run these from the repo root after `bash setup.sh && source .venv/bin/activate`.
 | `autonav.py` | Builds a hazard map from the terrain, plans a route with A\*, checks it, then drives it. `--viewer` to watch, `--plan-only` to skip the drive |
 | `terrain_probe.py` | Terrain height lookups, and a check that drops the rover at a pose and measures its tilt, suspension angles and belly clearance |
 | `m2020_drive.py` | Rocker-bogie steering: arcs, turn in place, and crab (sideways) driving |
+| `gym_env.py` | A [Gymnasium](https://gymnasium.farama.org) environment (`Perseverance-Nav-v0`) for training driving policies with reinforcement learning: drive to a random goal without tipping. Needs `pip install "gymnasium>=1.0"`; run it directly for a self-check |
 
 **Terrain**
 
