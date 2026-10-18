@@ -495,6 +495,49 @@ The terrain sampler now samples 1.7 mm off-grid and cross-checks.
 
 ---
 
+## Soft soil (optional terramechanics)
+
+MuJoCo's ground is rigid, so out of the box a wheel either grips up to its
+friction coefficient or slides. `scripts/terramechanics.py` adds the classic
+soft-soil terms on top of the live contacts, without touching the model
+files. Each wheel gets Bekker sinkage and compaction resistance from its
+measured normal load, and a Janosi-Hanamoto traction limit that builds with
+slip, applied by setting that wheel's friction coefficient to H/W every step.
+
+```python
+from terramechanics import SoftSoil
+soil = SoftSoil(model, "lunar_bekker")   # or "dry_sand", or your own n, kc, kphi, c, phi, K
+soil.apply(data)                          # before every mj_step
+```
+
+`python scripts/terramechanics.py` drives straight uphill at full speed for
+60 s per slope (gravity rotated to make the slope), on rigid ground and on
+the `lunar_bekker` soil, with the smooth-wheel model:
+
+| Slope | Rigid m/h | Soft m/h | Travel reduction | Wheel slip | Sinkage |
+|---|---|---|---|---|---|
+| 0° | 150.9 | 133.6 | 0.11 | 0.09 | 2.9 cm |
+| 5° | 148.6 | 92.9 | 0.38 | 0.29 | 2.8 cm |
+| 10° | 146.3 | 58.9 | 0.61 | 0.48 | 2.6 cm |
+| 15° | 144.0 | 29.0 | 0.81 | 0.61 | 2.6 cm |
+| 20° | 141.8 | 7.0 | 0.95 | 0.67 | 2.4 cm |
+| 25° | 139.7 | -8.5 | 1.06 | 0.73 | 2.4 cm |
+
+On rigid ground the rover barely notices the slope; only the drive motors
+sag a little under load. On loose soil, slip grows steeply with slope, the
+rover is down to 7 m/h at 20° and slides backwards at 25°. Mars rovers see
+the same thing on sand, which is why their drive planners treat sandy slopes
+far more conservatively than rock. The cleated model gives the same picture
+(29 m/h at 15° vs 29 m/h smooth).
+
+**What it is not:** the rut is not geometric (wheels still ride on the rigid
+surface; only its resistance is modelled), there is no bulldozing,
+multi-pass or grouser-specific term, lateral grip uses the same coefficient
+as longitudinal, and the soil values are textbook numbers (n, kc, kphi, c,
+phi as tabulated by J. Y. Wong, *Theory of Ground Vehicles*; K is EST), not
+measurements from Jezero. Treat the table as the right shape, not the right
+numbers for a particular dune.
+
 ## Running it on your machine
 
 ```bash

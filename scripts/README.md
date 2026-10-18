@@ -16,6 +16,7 @@ Run these from the repo root after `bash setup.sh && source .venv/bin/activate`.
 | `autonav.py` | Builds a hazard map from the terrain, plans a route with A\*, checks it, then drives it. `--viewer` to watch, `--plan-only` to skip the drive |
 | `terrain_probe.py` | Terrain height lookups, and a check that drops the rover at a pose and measures its tilt, suspension angles and belly clearance |
 | `m2020_drive.py` | Rocker-bogie steering: arcs, turn in place, and crab (sideways) driving |
+| `terramechanics.py` | Optional soft-soil wheel model (Bekker sinkage and compaction, slip-dependent traction). Run it for a rigid vs soft-soil slope sweep |
 
 **Terrain**
 
