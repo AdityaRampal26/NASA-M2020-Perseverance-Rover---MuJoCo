@@ -21,7 +21,7 @@ Run these from the repo root after `bash setup.sh && source .venv/bin/activate`.
 
 | Script | What it does |
 |---|---|
-| `fetch_jezero.py` | Downloads the real HiRISE elevation map of Jezero Crater and turns it into MuJoCo terrain |
+| `fetch_jezero.py` | Downloads a real HiRISE elevation map and turns it into MuJoCo terrain: Jezero Crater by default, `--site gale` for Curiosity's landing site, or `--url` for any other HiRISE DTM. `make_course.py --dtm NAME` then builds the course |
 | `make_course.py` | Generates a made-up Mars-like course with rocks and a crater rim |
 
 **Figures and animations**

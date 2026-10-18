@@ -8,6 +8,7 @@ The simulated rover and the ground it drives on, in MuJoCo's XML format (MJCF).
 | `m2020_perseverance_smooth.xml` | Same rover with smooth cylinder wheels. About 1.5× faster to simulate, but can't climb as well |
 | `course_jezero.xml` | The rover on **real Mars terrain**: the HiRISE elevation map of the Jezero Crater landing site, plus scattered rocks |
 | `course_jezero_boulder.xml` | Same, with a 2.8 m boulder placed across the straight-line route, for the autonomy demo |
+| `course_gale.xml` | Real Mars terrain at **Gale Crater**, beside Curiosity's Bradbury Landing, from HiRISE. Build other sites with `fetch_jezero.py --site` / `--url` and `make_course.py --dtm` |
 | `course_procedural.xml` | A made-up, Mars-like course from `scripts/make_course.py` |
 | `assets/` | The terrain height images. `setup.sh` also downloads JPL's 36 part meshes and the rover texture into here (they belong to NASA/JPL, so they aren't stored in the repo) |
 
