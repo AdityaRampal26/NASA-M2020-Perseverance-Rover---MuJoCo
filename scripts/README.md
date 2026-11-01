@@ -17,6 +17,7 @@ Run these from the repo root after `bash setup.sh && source .venv/bin/activate`.
 | `terrain_probe.py` | Terrain height lookups, and a check that drops the rover at a pose and measures its tilt, suspension angles and belly clearance |
 | `m2020_drive.py` | Rocker-bogie steering: arcs, turn in place, and crab (sideways) driving |
 | `gym_env.py` | A [Gymnasium](https://gymnasium.farama.org) environment (`Perseverance-Nav-v0`) for training driving policies with reinforcement learning: drive to a random goal without tipping. Needs `pip install "gymnasium>=1.0"`; run it directly for a self-check |
+| `terramechanics.py` | Optional soft-soil wheel model (Bekker sinkage and compaction, slip-dependent traction). Run it for a rigid vs soft-soil slope sweep |
 
 **Flight-style autonomy (ACE and ENav)**
 
